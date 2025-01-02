@@ -7,7 +7,7 @@
       "use": "@vercel/node"
     },
     {
-      "src": "index.html",
+      "src": "public/**",
       "use": "@vercel/static"
     }
   ],
@@ -20,8 +20,5 @@
       "src": "/(.*)",
       "dest": "/index.html"
     }
-  ],
-  "env": {
-    "API_KEY": "@API_KEY"
-  }
+  ]
 }

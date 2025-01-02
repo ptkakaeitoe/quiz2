@@ -11,28 +11,21 @@ let questionNumber = 1;
 
 async function callOpenAI(prompt) {
   try {
-    const response = await fetch("https://api.openai.com/v1/chat/completions", {
+    const response = await fetch("/api/callOpenAI", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer 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`, // Replace with your actual API key
       },
-      body: JSON.stringify({
-        model: "gpt-3.5-turbo",
-        messages: [
-          { role: "system", content: "You are a helpful assistant." },
-          { role: "user", content: prompt },
-        ],
-        max_tokens: 150,
-        temperature: 0.7,
-      }),
+      body: JSON.stringify({ prompt }),
     });
 
     if (!response.ok) {
       const errorDetails = await response.json();
       console.error("API Error:", errorDetails);
       throw new Error(
-        `API Error: ${response.status} - ${errorDetails.error.message}`
+        `API Error: ${response.status} - ${
+          errorDetails.error?.message || "Unknown error"
+        }`
       );
     }
 

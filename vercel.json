@@ -1,13 +1,16 @@
 {
   "version": 2,
-  "name": "quiz-app",
   "builds": [
     {
       "src": "api/callOpenAI.js",
       "use": "@vercel/node"
     },
     {
-      "src": "public/**",
+      "src": "final.js",
+      "use": "@vercel/node"
+    },
+    {
+      "src": "index.html",
       "use": "@vercel/static"
     }
   ],
@@ -17,8 +20,12 @@
       "dest": "api/callOpenAI.js"
     },
     {
+      "src": "/final.js",
+      "dest": "final.js"
+    },
+    {
       "src": "/(.*)",
-      "dest": "/public/index.html"
+      "dest": "index.html"
     }
   ]
 }

@@ -15,7 +15,7 @@ async function callOpenAI(prompt) {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${process.env.REACT_APP_API_KEY}`, // Use the environment variable
+        Authorization: `Bearer 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`, // Replace with your actual API key
       },
       body: JSON.stringify({
         model: "gpt-3.5-turbo",

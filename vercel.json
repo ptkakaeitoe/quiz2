@@ -6,11 +6,7 @@
       "use": "@vercel/node"
     },
     {
-      "src": "final.js",
-      "use": "@vercel/node"
-    },
-    {
-      "src": "index.html",
+      "src": "public/**",
       "use": "@vercel/static"
     }
   ],
@@ -21,11 +17,11 @@
     },
     {
       "src": "/final.js",
-      "dest": "final.js"
+      "dest": "/public/final.js"
     },
     {
       "src": "/(.*)",
-      "dest": "index.html"
+      "dest": "/public/index.html"
     }
   ]
 }

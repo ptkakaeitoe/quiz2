@@ -4,148 +4,298 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Quiz App</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet" />
     <style>
       body {
-        font-family: "Roboto", Arial, sans-serif;
-        margin: 0;
-        padding: 0;
-        background-color: #f4f4f9;
-        color: #333;
-      }
-      h1 {
-        text-align: center;
-        margin: 20px 0;
-        font-size: 2.5rem;
-        color: #444;
-      }
-      h2 {
-        text-align: center;
-        margin-bottom: 20px;
-        color: #555;
-      }
-      .container {
-        max-width: 700px;
-        margin: 40px auto;
-        background: #fff;
-        padding: 30px;
-        border-radius: 12px;
-        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-      }
-      .container ul {
-        list-style-type: none;
-        padding: 0;
-      }
-      .container li {
-        margin-bottom: 10px;
-      }
-      button {
-        background-color: #007bff;
-        color: white;
-        border: none;
-        padding: 12px 20px;
-        margin: 10px 5px 0 0;
-        border-radius: 8px;
-        cursor: pointer;
-        font-size: 1rem;
-        transition: all 0.3s ease;
-      }
-      button:hover {
-        background-color: #0056b3;
-      }
-      input {
-        padding: 12px;
-        margin: 10px 0;
-        width: calc(100% - 24px);
-        border: 1px solid #ddd;
-        border-radius: 8px;
-        font-size: 1rem;
-      }
-      .hidden {
-        display: none;
-      }
-      .question {
-        font-size: 1.2rem;
-        margin-bottom: 20px;
-      }
-      .answer-options button {
-        display: block;
-        margin: 10px 0;
-        width: 100%;
-        text-align: left;
-        font-size: 1rem;
-      }
-      .feedback-box {
-        background: #f9f9f9;
-        padding: 15px;
-        border: 1px solid #ddd;
-        border-radius: 8px;
-        width: calc(100% - 40px);
-        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-        margin-bottom: 20px;
-      }
-      .feedback-box p {
-        margin: 5px 0;
-      }
-      .feedback-message {
-        font-size: 1.2rem;
-        font-weight: bold;
-      }
-      .feedback-correct {
-        color: green;
-      }
-      .feedback-incorrect {
-        color: red;
-      }
-      .score {
-        font-size: 1.2rem;
-        font-weight: bold;
-        text-align: center;
-        margin: 10px 0;
-      }
-      .end-button {
-        background: #dc3545;
-        margin-top: 20px;
-      }
-      .end-button:hover {
-        background: #b02a37;
+        font-family: 'Poppins', sans-serif;
       }
     </style>
   </head>
-  <body>
-    <h1>Quiz App</h1>
-    <div class="container">
-      <!-- Category Selection -->
-      <div id="categorySection">
-        <h2>Select a Category</h2>
-        <ul id="categoryList"></ul>
-        <input type="text" id="newCategory" placeholder="Add a new category" />
-        <button onclick="addCategory()">Add Category</button>
+  <body class="bg-gray-50">
+    <!-- Main Container -->
+    <div class="min-h-screen flex flex-col items-center justify-center p-6">
+      <!-- Header -->
+      <h1 class="text-4xl font-bold text-gray-800 mb-8">Quiz App</h1>
+
+      <!-- Category Section -->
+      <div id="categorySection" class="bg-white p-8 rounded-xl shadow-lg w-full max-w-lg">
+        <h2 class="text-2xl font-semibold text-gray-700 mb-6 text-center">Select a Category</h2>
+        <div id="categoryList" class="grid grid-cols-2 gap-4 mb-6">
+          <!-- Categories will be dynamically added here -->
+        </div>
+        <input
+          type="text"
+          id="newCategory"
+          placeholder="Add a new category"
+          class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+        />
+        <button
+          onclick="addCategory()"
+          class="w-full mt-4 bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition duration-200"
+        >
+          Add Category
+        </button>
       </div>
 
       <!-- Quiz Section -->
-      <div id="quizSection" class="hidden">
-        <h2 id="quizCategory">Quiz:</h2>
+      <div id="quizSection" class="hidden bg-white p-8 rounded-xl shadow-lg w-full max-w-lg mt-8">
+        <h2 id="quizCategory" class="text-2xl font-semibold text-gray-700 mb-6 text-center">Quiz:</h2>
 
-        <!-- Feedback Box as Live Score -->
-        <div id="feedbackBox" class="feedback-box">
-          <p id="feedbackMessage" class="feedback-message">
-            Welcome to the Quiz!
-          </p>
-          <p class="score">
-            Score: <span id="liveScore">0</span> /
-            <span id="totalQuestions">0</span>
+        <!-- Progress Bar -->
+        <div class="w-full bg-gray-200 rounded-full h-2 mb-6">
+          <div id="quizProgress" class="bg-blue-500 h-2 rounded-full" style="width: 0%"></div>
+        </div>
+
+        <!-- Feedback Box -->
+        <div id="feedbackBox" class="bg-blue-50 p-4 rounded-lg border border-blue-200 mb-6">
+          <p id="feedbackMessage" class="text-lg font-semibold text-blue-700">Welcome to the Quiz!</p>
+          <p class="text-blue-600 mt-2">
+            Score: <span id="liveScore" class="font-bold">0</span> /
+            <span id="totalQuestions" class="font-bold">0</span>
           </p>
         </div>
 
+        <!-- Question Container -->
         <div id="questionContainer">
-          <!-- Question -->
-          <p class="question" id="questionText"></p>
-          <div class="answer-options" id="answerOptions"></div>
+          <p id="questionText" class="text-xl font-medium text-gray-700 mb-6"></p>
+          <div id="answerOptions" class="space-y-3"></div>
         </div>
-        <button class="end-button" onclick="endQuiz()">End Quiz!</button>
+
+        <!-- End Quiz Button -->
+        <button
+          onclick="endQuiz()"
+          class="w-full mt-6 bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition duration-200"
+        >
+          End Quiz!
+        </button>
       </div>
     </div>
 
-    <script src="final.js"></script>
+    <script>
+      // Your JavaScript logic
+      let categories = [
+        "Country and its Cities",
+        "Famous People",
+        "Myanmar",
+        "World Wars",
+      ];
+      let currentCategory = "";
+      let askedQuestions = [];
+      let correctAnswers = 0;
+      let questionNumber = 1;
+
+      async function callOpenAI(prompt) {
+        try {
+          const response = await fetch("/api/callOpenAI", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ prompt }),
+          });
+
+          if (!response.ok) {
+            const errorDetails = await response.json();
+            console.error("API Error:", errorDetails);
+            throw new Error(
+              `API Error: ${response.status} - ${
+                errorDetails.error?.message || "Unknown error"
+              }`
+            );
+          }
+
+          const data = await response.json();
+          return data.choices[0]?.message.content.trim();
+        } catch (error) {
+          console.error("Error calling OpenAI API:", error.message);
+          return null;
+        }
+      }
+
+      function loadCategories() {
+        const categoryList = document.getElementById("categoryList");
+        categoryList.innerHTML = "";
+        categories.forEach((category) => {
+          const button = document.createElement("button");
+          button.className =
+            "w-full bg-blue-100 text-blue-800 px-4 py-2 rounded-lg hover:bg-blue-200 transition duration-200";
+          button.textContent = category;
+          button.onclick = () => startQuiz(category);
+          categoryList.appendChild(button);
+        });
+      }
+
+      function addCategory() {
+        const newCategory = document.getElementById("newCategory").value.trim();
+        if (newCategory && !categories.includes(newCategory)) {
+          categories.push(newCategory);
+          loadCategories();
+          document.getElementById("newCategory").value = "";
+          alert(`Category "${newCategory}" added successfully!`);
+        } else {
+          alert("Please enter a valid and unique category.");
+        }
+      }
+
+      async function startQuiz(category) {
+        currentCategory = category;
+        askedQuestions = [];
+        correctAnswers = 0;
+        questionNumber = 1;
+
+        document.getElementById("categorySection").classList.add("hidden");
+        document.getElementById("quizSection").classList.remove("hidden");
+        document.getElementById("quizCategory").innerText = `Quiz: ${category}`;
+
+        await loadQuestion();
+      }
+
+      async function loadQuestion() {
+        const feedbackBox = document.getElementById("feedbackBox");
+        feedbackBox.classList.remove("hidden");
+
+        // Prepare a string of already asked questions
+        const askedQuestionsString = askedQuestions
+          .map((q, index) => `(${index + 1}) ${q}`)
+          .join("\n");
+
+        const prompt = `
+          Ask me one unique question about ${currentCategory} with 4 multiple-choice answers (A, B, C, D). 
+          Avoid repeating any of the following questions:
+          ${askedQuestionsString}
+
+          Start the question with "No. ${questionNumber}".
+        `;
+
+        const questionResponse = await callOpenAI(prompt);
+
+        if (!questionResponse) {
+          updateFeedbackBox("Error fetching question. Please try again.", false);
+          return;
+        }
+
+        // Check if the question is already in the list of asked questions
+        if (askedQuestions.includes(questionResponse.trim())) {
+          console.warn("Duplicate question detected. Fetching another question...");
+          await loadQuestion(); // Retry loading a unique question
+          return;
+        }
+
+        askedQuestions.push(questionResponse.trim()); // Save the new question
+        document.getElementById("questionText").innerText = questionResponse.trim();
+
+        const options = ["A", "B", "C", "D"];
+        const answerOptions = document.getElementById("answerOptions");
+        answerOptions.innerHTML = ""; // Clear previous options
+
+        options.forEach((option) => {
+          const button = document.createElement("button");
+          button.className =
+            "w-full bg-gray-100 px-4 py-2 rounded-lg hover:bg-blue-100 transition duration-200";
+          button.textContent = option;
+          button.dataset.answer = option;
+          button.onclick = (event) =>
+            validateAnswer(event.target.dataset.answer, questionResponse);
+          answerOptions.appendChild(button);
+        });
+
+        // Update progress bar
+        const progress = (questionNumber / 20) * 100;
+        document.getElementById("quizProgress").style.width = `${progress}%`;
+      }
+
+      async function validateAnswer(selected, questionResponse) {
+        const extractAnswerPrompt = `
+          Extract the correct answer for the following multiple-choice question.
+          Question: ${questionResponse}
+
+          Respond with only the letter of the correct answer (A, B, C, or D), without any explanation or additional text.
+        `;
+
+        callOpenAI(extractAnswerPrompt)
+          .then((extractedAnswer) => {
+            if (!extractedAnswer) {
+              updateFeedbackBox("Error extracting the correct answer.", false);
+              return;
+            }
+
+            const correctAnswer = extractedAnswer.trim().toUpperCase();
+            const sanitizedAnswer = correctAnswer.match(/^[A-D]/)?.[0];
+
+            if (!sanitizedAnswer) {
+              updateFeedbackBox(
+                "Error validating the answer. Please try again.",
+                false
+              );
+              return;
+            }
+
+            if (selected === sanitizedAnswer) {
+              updateFeedbackBox("Correct!", true);
+              correctAnswers++;
+            } else {
+              updateFeedbackBox(
+                `Incorrect. The correct answer was ${sanitizedAnswer}.`,
+                false
+              );
+            }
+
+            updateScore();
+            questionNumber++;
+            setTimeout(() => {
+              if (questionNumber > 20) {
+                endQuiz();
+              } else {
+                loadQuestion();
+              }
+            }, 2000); // 2 seconds delay to show feedback
+          })
+          .catch((error) => {
+            console.error(error);
+            updateFeedbackBox("An error occurred. Please try again.", false);
+          });
+      }
+
+      function endQuiz() {
+        const feedbackBox = document.getElementById("feedbackBox");
+        const feedbackMessage = document.getElementById("feedbackMessage");
+
+        feedbackMessage.innerText = `Quiz ended! Your final score is ${correctAnswers} out of 20.`;
+        feedbackMessage.style.color = "blue";
+
+        feedbackBox.classList.remove("hidden");
+
+        document.getElementById("quizSection").classList.add("hidden");
+        document.getElementById("categorySection").classList.remove("hidden");
+
+        correctAnswers = 0;
+        questionNumber = 1;
+        updateScore();
+      }
+
+      function updateFeedbackBox(message, isCorrect) {
+        const feedbackBox = document.getElementById("feedbackBox");
+        const feedbackMessage = document.getElementById("feedbackMessage");
+
+        feedbackMessage.innerText = message;
+        feedbackMessage.className = `text-lg font-semibold ${
+          isCorrect ? "text-green-600" : "text-red-600"
+        }`;
+
+        feedbackBox.classList.remove("hidden");
+      }
+
+      function updateScore() {
+        const liveScore = document.getElementById("liveScore");
+        const totalQuestions = document.getElementById("totalQuestions");
+
+        liveScore.innerText = correctAnswers;
+        totalQuestions.innerText = askedQuestions.length;
+      }
+
+      // Load categories on page load
+      loadCategories();
+    </script>
   </body>
 </html>
